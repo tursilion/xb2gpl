@@ -153,6 +153,11 @@ REM GPL MOVE - Inserts a GPL MOVE command. All modes except GROM indexed are sup
 		REM GPL MOVE >0010 TO V@>0300 FROM G@>6100
 		-stores a GPL move command that moves 16 bytes from GROM >6100 to VDP >0300
 		
+REM GPL XML - Inserts a GPL XML command. The most common use is to CALL LOAD an address to
+        -32000 (>8300) so you can use XML >F0 to call assembly code.
+        REM GPL XML >F0
+        - Stores a GPL XML command with argument >F0
+		
 DISPLAY AT - Puts strings on the screen. Only this one strict syntax is supported.
 		DISPLAY at will be combined with other ajacent DISPLAY, HCHAR, or VCHAR commands
 		into a single FMT statement. Variables are not supported.

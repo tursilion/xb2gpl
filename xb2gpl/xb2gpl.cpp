@@ -89,6 +89,7 @@ void doReturn(char *buf);
 void doAorg(char *buf);
 void doBss(char *buf);
 void doMove(char *buf);
+void doXml(char *buf);
 void doInit(char *buf);
 void doCharset(char *buf);
 void doChar(char *buf);
@@ -117,6 +118,7 @@ struct LINKS gpl[] = {
 	{	"aorg",		doAorg		},
 	{	"bss",		doBss		},
 	{	"move",		doMove		},
+	{	"xml",		doXml		},
 
 	{	"*",		NULL		}
 };
@@ -1417,3 +1419,37 @@ void doMove(char *buf) {
 	printf("\n");
 }
 
+void doXml(char *buf) {
+	unsigned char c = 0x0f;		// XML command
+	_strlwr(buf);
+	char *p = strstr(buf, "gpl xml ");
+	if (NULL == p) {
+		printf("  Can't find GPL XML string\n");
+		return;
+	}
+	p+=8;
+	while ((*p)&&(isspace(*p))) p++;
+
+	grom[nOffset++] = c;
+	printf("  %04X: XML ", nOffset+nBase);
+
+	// index byte
+	int nCount = 0;
+	// read immediate value
+	if (*p == '>') {
+		// read hex
+		p++;
+		if (1 != sscanf(p, "%x", &nCount)) {
+			printf("  Failed to parse hexadecimal count\n");
+			return;
+		}
+	} else {
+		if (1 != sscanf(p, "%d", &nCount)) {
+			printf("  Failed to parse count\n");
+			return;
+		}
+	}
+	nCount &= 0xff;
+	printf(">%02X\n", nCount);
+	grom[nOffset++]=nCount;
+}
